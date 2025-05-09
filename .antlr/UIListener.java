@@ -57,6 +57,56 @@ public interface UIListener extends ParseTreeListener {
 	 */
 	void exitComponent(UIParser.ComponentContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link UIParser#labelComponent}.
+	 * @param ctx the parse tree
+	 */
+	void enterLabelComponent(UIParser.LabelComponentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#labelComponent}.
+	 * @param ctx the parse tree
+	 */
+	void exitLabelComponent(UIParser.LabelComponentContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link UIParser#textfieldComponent}.
+	 * @param ctx the parse tree
+	 */
+	void enterTextfieldComponent(UIParser.TextfieldComponentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#textfieldComponent}.
+	 * @param ctx the parse tree
+	 */
+	void exitTextfieldComponent(UIParser.TextfieldComponentContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link UIParser#checkboxComponent}.
+	 * @param ctx the parse tree
+	 */
+	void enterCheckboxComponent(UIParser.CheckboxComponentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#checkboxComponent}.
+	 * @param ctx the parse tree
+	 */
+	void exitCheckboxComponent(UIParser.CheckboxComponentContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link UIParser#dropdownComponent}.
+	 * @param ctx the parse tree
+	 */
+	void enterDropdownComponent(UIParser.DropdownComponentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#dropdownComponent}.
+	 * @param ctx the parse tree
+	 */
+	void exitDropdownComponent(UIParser.DropdownComponentContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link UIParser#buttonComponent}.
+	 * @param ctx the parse tree
+	 */
+	void enterButtonComponent(UIParser.ButtonComponentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#buttonComponent}.
+	 * @param ctx the parse tree
+	 */
+	void exitButtonComponent(UIParser.ButtonComponentContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link UIParser#labelProperty}.
 	 * @param ctx the parse tree
 	 */
@@ -66,6 +116,46 @@ public interface UIListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLabelProperty(UIParser.LabelPropertyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link UIParser#textfieldProperty}.
+	 * @param ctx the parse tree
+	 */
+	void enterTextfieldProperty(UIParser.TextfieldPropertyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#textfieldProperty}.
+	 * @param ctx the parse tree
+	 */
+	void exitTextfieldProperty(UIParser.TextfieldPropertyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link UIParser#checkboxProperty}.
+	 * @param ctx the parse tree
+	 */
+	void enterCheckboxProperty(UIParser.CheckboxPropertyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#checkboxProperty}.
+	 * @param ctx the parse tree
+	 */
+	void exitCheckboxProperty(UIParser.CheckboxPropertyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link UIParser#dropdownProperty}.
+	 * @param ctx the parse tree
+	 */
+	void enterDropdownProperty(UIParser.DropdownPropertyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#dropdownProperty}.
+	 * @param ctx the parse tree
+	 */
+	void exitDropdownProperty(UIParser.DropdownPropertyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link UIParser#buttonProperty}.
+	 * @param ctx the parse tree
+	 */
+	void enterButtonProperty(UIParser.ButtonPropertyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#buttonProperty}.
+	 * @param ctx the parse tree
+	 */
+	void exitButtonProperty(UIParser.ButtonPropertyContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link UIParser#stringList}.
 	 * @param ctx the parse tree

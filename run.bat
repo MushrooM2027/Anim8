@@ -44,7 +44,7 @@ rem --- Run the DSLCompiler ---
 java -cp "%BIN_DIR%;%ANTLR_JAR%" DSLCompiler %DSL_INPUT%
 
 rem --- Compile the generated application ---
-javac --module-path %JAVA_FX_LIB% --add-modules javafx.controls -d %BIN_DIR% GeneratedApp.java
+javac --module-path %JAVA_FX_LIB% --add-modules javafx.controls,javafx.fxml,javafx.web -d %BIN_DIR% GeneratedApp.java
 
 rem --- Run the application ---
-java --module-path %JAVA_FX_LIB% --add-modules javafx.controls -cp %BIN_DIR% GeneratedApp
+java --module-path %JAVA_FX_LIB% --add-modules javafx.controls,javafx.fxml,javafx.web -cp "%BIN_DIR%;resources" GeneratedApp

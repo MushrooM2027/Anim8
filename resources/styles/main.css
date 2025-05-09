@@ -1,0 +1,35 @@
+/* main.css */
+
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: #f0f4f8;
+}
+
+.button {
+    -fx-background-color: #2e86de;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+}
+
+.button:hover {
+    -fx-background-color: #1e5fa3;
+}
+
+.tab {
+    -fx-font-size: 14px;
+}
+
+.color-picker {
+    -fx-color-label-visible: false;
+}
+
+.accordion {
+    -fx-background-color: #ffffff;
+}
+
+.titled-pane > .title {
+    -fx-background-color: #2e86de;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
