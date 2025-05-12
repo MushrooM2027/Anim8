@@ -52,6 +52,11 @@ public class CustomUTToJavaFXVisitor extends UIBaseVisitor<String> {
                 .append("import javafx.scene.input.KeyEvent;\n")
                 .append("import java.util.Map;\n")
                 .append("import java.util.HashMap;\n")
+                .append("import javafx.scene.chart.*;\n")
+                .append("import javafx.collections.*;\n")
+                .append("import javafx.animation.*;\n")
+                .append("import javafx.scene.effect.*;\n")
+                .append("import javafx.util.*;\n")
                 .append("\npublic class GeneratedApp extends Application {\n")
                 // Class-level fields
                 .append("    private VBox mainRoot;\n")
@@ -527,49 +532,69 @@ public class CustomUTToJavaFXVisitor extends UIBaseVisitor<String> {
 
     @Override
     public String visitButtonComponent(UIParser.ButtonComponentContext ctx) {
-        String varName = "button" + ctx.hashCode();
+        String label = ctx.STRING().getText().replace("\"", "");
+        String varName = generateComponentId("button");
+
+        javaCode.append("        Button ").append(varName).append(" = new Button(\"").append(label).append("\");\n");
+
         currentComponentId = varName;
 
-        String text = ctx.STRING().getText().replace("\"", "");
-        javaCode.append("        Button ").append(varName)
-                .append(" = new Button(\"").append(text).append("\");\n");
-
+        // Handle onClick event
         if (ctx.eventAction() != null) {
-            javaCode.append("        ").append(varName)
-                    .append(".setOnAction(event -> {\n");
-            String actionBody = visitEventAction(ctx.eventAction());
-            javaCode.append(actionBody);
+            javaCode.append("        ").append(varName).append(".setOnAction(event -> {\n");
+            visit(ctx.eventAction());
             javaCode.append("        });\n");
         }
 
+        // Button properties
         for (UIParser.ButtonPropertyContext prop : ctx.buttonProperty()) {
-            if (prop.INT() != null && prop.getText().contains("width")) {
-                javaCode.append("        ").append(varName)
-                        .append(".setPrefWidth(").append(prop.INT().getText()).append(");\n");
-            } else if (prop.getText().contains("disabled")) {
-                javaCode.append("        ").append(varName)
-                        .append(".setDisable(true);\n");
-            } else if (prop.getText().contains("defaultButton")) {
-                javaCode.append("        ").append(varName)
-                        .append(".setDefaultButton(true);\n");
-            }
-            if (prop.eventBinding() != null) {
+            String text = prop.getText();
+            if (text.startsWith("width")) {
+                javaCode.append("        ").append(varName).append(".setPrefWidth(")
+                        .append(prop.INT().getText()).append(");\n");
+            } else if (text.equals("defaultButton")) {
+                javaCode.append("        ").append(varName).append(".setDefaultButton(true);\n");
+            } else if (text.equals("disabled")) {
+                javaCode.append("        ").append(varName).append(".setDisable(true);\n");
+            } else if (prop.eventBinding() != null) {
                 visit(prop.eventBinding());
             }
         }
 
-        for (UIParser.LayoutPropertyContext prop : ctx.layoutProperty()) {
-            applyLayoutProperties(varName, prop);
-            if (prop.eventBinding() != null) {
-                visit(prop.eventBinding());
+        // Layout properties
+        for (UIParser.LayoutPropertyContext layout : ctx.layoutProperty()) {
+            applyLayoutProperties(varName, layout);
+            if (layout.eventBinding() != null) {
+                visit(layout.eventBinding());
             }
         }
 
+        // Animations (1st set)
+        for (UIParser.AnimationBindingContext anim : ctx.animationBinding()) {
+            applyAnimationBindings(varName, List.of(anim));
+        }
+
+        // Effect
+        if (ctx.effectBinding() != null) {
+            for (UIParser.EffectBindingContext eff : ctx.effectBinding()) {
+                applyEffectBinding(varName, eff);
+            }
+        }
+
+        // Animations (2nd set)
+        if (ctx.animationBinding().size() > 1) {
+            // If multiple animationBinding sections are allowed (e.g., before and after
+            // effectBinding)
+            applyAnimationBindings(varName, ctx.animationBinding().subList(1, ctx.animationBinding().size()));
+        }
+
+        // General event bindings
         for (UIParser.EventBindingContext eb : ctx.eventBinding()) {
             visit(eb);
         }
 
         javaCode.append("        mainRoot.getChildren().add(").append(varName).append(");\n");
+
         currentComponentId = null;
         return "";
     }
@@ -1714,6 +1739,106 @@ public class CustomUTToJavaFXVisitor extends UIBaseVisitor<String> {
         return "";
     }
 
+    @Override
+    public String visitChartComponent(UIParser.ChartComponentContext ctx) {
+        String chartType = ctx.chartType().getText();
+        String id = ctx.IDENTIFIER().getText();
+        String title = ctx.STRING().getText().replace("\"", "");
+        currentComponentId = id;
+
+        javaCode.append("        Chart ").append(id).append(" = null;\n");
+
+        javaCode.append("        switch (\"").append(chartType).append("\") {\n")
+                .append("            case \"PieChart\":\n")
+                .append("                ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();\n");
+
+        for (UIParser.DataPairContext pair : ctx.dataList().dataPair()) {
+            String key = pair.STRING().getText().replace("\"", "");
+            String value = pair.INT() != null ? pair.INT().getText() : pair.FLOAT().getText();
+            javaCode.append("                pieData.add(new PieChart.Data(\"").append(key).append("\", ")
+                    .append(value).append("));\n");
+        }
+        javaCode.append("                ").append(id).append(" = new PieChart(pieData);\n")
+                .append("                ((PieChart)").append(id).append(").setTitle(\"").append(title).append("\");\n")
+                .append("                break;\n")
+                .append("            case \"BarChart\":\n")
+                .append("                CategoryAxis xAxis = new CategoryAxis();\n")
+                .append("                NumberAxis yAxis = new NumberAxis();\n")
+                .append("                xAxis.setLabel(\"Category\");\n")
+                .append("                yAxis.setLabel(\"Value\");\n")
+                .append("                BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);\n")
+                .append("                XYChart.Series<String, Number> series = new XYChart.Series<>();\n");
+
+        for (UIParser.DataPairContext pair : ctx.dataList().dataPair()) {
+            String key = pair.STRING().getText().replace("\"", "");
+            String value = pair.INT() != null ? pair.INT().getText() : pair.FLOAT().getText();
+            javaCode.append("                series.getData().add(new XYChart.Data<>(\"").append(key).append("\", ")
+                    .append(value).append("));\n");
+        }
+        javaCode.append("                barChart.getData().add(series);\n")
+                .append("                barChart.setTitle(\"").append(title).append("\");\n")
+                .append("                ").append(id).append(" = barChart;\n")
+                .append("                break;\n")
+                .append("            case \"LineChart\":\n")
+                .append("                CategoryAxis lxAxis = new CategoryAxis();\n")
+                .append("                NumberAxis lyAxis = new NumberAxis();\n")
+                .append("                LineChart<String, Number> lineChart = new LineChart<>(lxAxis, lyAxis);\n")
+                .append("                XYChart.Series<String, Number> lineSeries = new XYChart.Series<>();\n");
+
+        for (UIParser.DataPairContext pair : ctx.dataList().dataPair()) {
+            String key = pair.STRING().getText().replace("\"", "");
+            String value = pair.INT() != null ? pair.INT().getText() : pair.FLOAT().getText();
+            javaCode.append("                lineSeries.getData().add(new XYChart.Data<>(\"").append(key).append("\", ")
+                    .append(value).append("));\n");
+        }
+        javaCode.append("                lineChart.getData().add(lineSeries);\n")
+                .append("                lineChart.setTitle(\"").append(title).append("\");\n")
+                .append("                ").append(id).append(" = lineChart;\n")
+                .append("                break;\n")
+                .append("        }\n");
+
+        for (UIParser.ChartPropertyContext prop : ctx.chartProperty()) {
+            if (prop.BOOLEAN() != null) {
+                if (prop.getText().contains("legendVisible")) {
+                    javaCode.append("        if (").append(id).append(" instanceof PieChart) ((PieChart) ").append(id)
+                            .append(").setLegendVisible(").append(prop.BOOLEAN().getText()).append(");\n");
+                } else if (prop.getText().contains("animated")) {
+                    javaCode.append("        if (").append(id).append(" instanceof BarChart) ((BarChart) ").append(id)
+                            .append(").setAnimated(").append(prop.BOOLEAN().getText()).append(");\n");
+                }
+            }
+            if (prop.STRING() != null) {
+                if (prop.getText().contains("categoryAxisLabel")) {
+                    javaCode.append("        if (").append(id).append(" instanceof BarChart) ((BarChart) ").append(id)
+                            .append(").getXAxis().setLabel(\"").append(prop.STRING().getText().replace("\"", ""))
+                            .append("\");\n");
+                } else if (prop.getText().contains("valueAxisLabel")) {
+                    javaCode.append("        if (").append(id).append(" instanceof BarChart) ((BarChart) ").append(id)
+                            .append(").getYAxis().setLabel(\"").append(prop.STRING().getText().replace("\"", ""))
+                            .append("\");\n");
+                }
+            }
+            if (prop.eventBinding() != null) {
+                visit(prop.eventBinding());
+            }
+        }
+
+        for (UIParser.LayoutPropertyContext prop : ctx.layoutProperty()) {
+            applyLayoutProperties(id, prop);
+            if (prop.eventBinding() != null) {
+                visit(prop.eventBinding());
+            }
+        }
+
+        for (UIParser.EventBindingContext eb : ctx.eventBinding()) {
+            visit(eb);
+        }
+
+        javaCode.append("        mainRoot.getChildren().add(").append(id).append(");\n");
+        currentComponentId = null;
+        return "";
+    }
+
     private void handleEventAction(String componentId, UIParser.EventActionContext ctx) {
         javaCode.append("            try {\n");
         String actionText = ctx.getText();
@@ -1955,6 +2080,98 @@ public class CustomUTToJavaFXVisitor extends UIBaseVisitor<String> {
                 && (type.equals("VBox") || type.equals("HBox") || type.equals("Canvas") || type.equals("Pane")
                         || type.equals("GridPane") || type.equals("TextField") || type.equals("TextArea")
                         || type.equals("Label") /* etc. */);
+    }
+
+    private int animationCounter = 0;
+
+    private void applyAnimationBindings(String id, List<UIParser.AnimationBindingContext> animations) {
+        for (UIParser.AnimationBindingContext anim : animations) {
+            String type = anim.animationType().getText();
+            String duration = anim.INT(0) != null ? anim.INT(0).getText() : "1000";
+            String cycleCount = anim.INT(1) != null ? anim.INT(1).getText() : "1";
+            String autoReverse = anim.BOOLEAN() != null ? anim.BOOLEAN().getText() : "false";
+
+            // Generate a unique suffix
+            String animVarSuffix = id + (++animationCounter);
+
+            switch (type) {
+                case "fade":
+                    javaCode.append("        FadeTransition ft_").append(animVarSuffix)
+                            .append(" = new FadeTransition(Duration.millis(").append(duration)
+                            .append("), ").append(id).append(");\n")
+                            .append("        ft_").append(animVarSuffix).append(".setFromValue(0.0);\n")
+                            .append("        ft_").append(animVarSuffix).append(".setToValue(1.0);\n")
+                            .append("        ft_").append(animVarSuffix).append(".setCycleCount(").append(cycleCount)
+                            .append(");\n")
+                            .append("        ft_").append(animVarSuffix).append(".setAutoReverse(").append(autoReverse)
+                            .append(");\n")
+                            .append("        ft_").append(animVarSuffix).append(".play();\n");
+                    break;
+                case "rotate":
+                    javaCode.append("        RotateTransition rt_").append(animVarSuffix)
+                            .append(" = new RotateTransition(Duration.millis(").append(duration)
+                            .append("), ").append(id).append(");\n")
+                            .append("        rt_").append(animVarSuffix).append(".setByAngle(360);\n")
+                            .append("        rt_").append(animVarSuffix).append(".setCycleCount(").append(cycleCount)
+                            .append(");\n")
+                            .append("        rt_").append(animVarSuffix).append(".setAutoReverse(").append(autoReverse)
+                            .append(");\n")
+                            .append("        rt_").append(animVarSuffix).append(".play();\n");
+                    break;
+                case "scale":
+                    javaCode.append("        ScaleTransition st_").append(animVarSuffix)
+                            .append(" = new ScaleTransition(Duration.millis(").append(duration)
+                            .append("), ").append(id).append(");\n")
+                            .append("        st_").append(animVarSuffix).append(".setByX(1.5);\n")
+                            .append("        st_").append(animVarSuffix).append(".setByY(1.5);\n")
+                            .append("        st_").append(animVarSuffix).append(".setCycleCount(").append(cycleCount)
+                            .append(");\n")
+                            .append("        st_").append(animVarSuffix).append(".setAutoReverse(").append(autoReverse)
+                            .append(");\n")
+                            .append("        st_").append(animVarSuffix).append(".play();\n");
+                    break;
+                case "translate":
+                    javaCode.append("        TranslateTransition tt_").append(animVarSuffix)
+                            .append(" = new TranslateTransition(Duration.millis(").append(duration)
+                            .append("), ").append(id).append(");\n")
+                            .append("        tt_").append(animVarSuffix).append(".setByX(50);\n")
+                            .append("        tt_").append(animVarSuffix).append(".setCycleCount(").append(cycleCount)
+                            .append(");\n")
+                            .append("        tt_").append(animVarSuffix).append(".setAutoReverse(").append(autoReverse)
+                            .append(");\n")
+                            .append("        tt_").append(animVarSuffix).append(".play();\n");
+                    break;
+            }
+        }
+    }
+
+    private void applyEffectBinding(String id, UIParser.EffectBindingContext effect) {
+        if (effect == null)
+            return;
+        String effectType = effect.effectType().getText();
+        switch (effectType) {
+            case "dropShadow":
+                javaCode.append("        ").append(id).append(".setEffect(new DropShadow());\n");
+                break;
+            case "glow":
+                javaCode.append("        ").append(id).append(".setEffect(new Glow());\n");
+                break;
+            case "bloom":
+                javaCode.append("        ").append(id).append(".setEffect(new Bloom());\n");
+                break;
+            case "sepia":
+                javaCode.append("        ").append(id).append(".setEffect(new SepiaTone());\n");
+                break;
+            case "gaussianBlur":
+                javaCode.append("        ").append(id).append(".setEffect(new GaussianBlur());\n");
+                break;
+        }
+    }
+
+    private int idCounter = 0;
+
+    private String generateComponentId(String prefix) {
+        return prefix + (++idCounter);
     }
 
     // Then, before calling applyLayoutProperties:

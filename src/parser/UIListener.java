@@ -388,6 +388,26 @@ public interface UIListener extends ParseTreeListener {
 	 */
 	void exitDialogComponent(UIParser.DialogComponentContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link UIParser#chartComponent}.
+	 * @param ctx the parse tree
+	 */
+	void enterChartComponent(UIParser.ChartComponentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#chartComponent}.
+	 * @param ctx the parse tree
+	 */
+	void exitChartComponent(UIParser.ChartComponentContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link UIParser#chartType}.
+	 * @param ctx the parse tree
+	 */
+	void enterChartType(UIParser.ChartTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#chartType}.
+	 * @param ctx the parse tree
+	 */
+	void exitChartType(UIParser.ChartTypeContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link UIParser#eventBinding}.
 	 * @param ctx the parse tree
 	 */
@@ -398,6 +418,46 @@ public interface UIListener extends ParseTreeListener {
 	 */
 	void exitEventBinding(UIParser.EventBindingContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link UIParser#animationBinding}.
+	 * @param ctx the parse tree
+	 */
+	void enterAnimationBinding(UIParser.AnimationBindingContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#animationBinding}.
+	 * @param ctx the parse tree
+	 */
+	void exitAnimationBinding(UIParser.AnimationBindingContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link UIParser#animationType}.
+	 * @param ctx the parse tree
+	 */
+	void enterAnimationType(UIParser.AnimationTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#animationType}.
+	 * @param ctx the parse tree
+	 */
+	void exitAnimationType(UIParser.AnimationTypeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link UIParser#effectBinding}.
+	 * @param ctx the parse tree
+	 */
+	void enterEffectBinding(UIParser.EffectBindingContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#effectBinding}.
+	 * @param ctx the parse tree
+	 */
+	void exitEffectBinding(UIParser.EffectBindingContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link UIParser#effectType}.
+	 * @param ctx the parse tree
+	 */
+	void enterEffectType(UIParser.EffectTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#effectType}.
+	 * @param ctx the parse tree
+	 */
+	void exitEffectType(UIParser.EffectTypeContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link UIParser#eventAction}.
 	 * @param ctx the parse tree
 	 */
@@ -407,6 +467,16 @@ public interface UIListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitEventAction(UIParser.EventActionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link UIParser#chartProperty}.
+	 * @param ctx the parse tree
+	 */
+	void enterChartProperty(UIParser.ChartPropertyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#chartProperty}.
+	 * @param ctx the parse tree
+	 */
+	void exitChartProperty(UIParser.ChartPropertyContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link UIParser#labelProperty}.
 	 * @param ctx the parse tree
@@ -797,4 +867,24 @@ public interface UIListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDialogType(UIParser.DialogTypeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link UIParser#dataList}.
+	 * @param ctx the parse tree
+	 */
+	void enterDataList(UIParser.DataListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#dataList}.
+	 * @param ctx the parse tree
+	 */
+	void exitDataList(UIParser.DataListContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link UIParser#dataPair}.
+	 * @param ctx the parse tree
+	 */
+	void enterDataPair(UIParser.DataPairContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link UIParser#dataPair}.
+	 * @param ctx the parse tree
+	 */
+	void exitDataPair(UIParser.DataPairContext ctx);
 }

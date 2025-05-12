@@ -239,17 +239,59 @@ public interface UIVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDialogComponent(UIParser.DialogComponentContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link UIParser#chartComponent}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitChartComponent(UIParser.ChartComponentContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link UIParser#chartType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitChartType(UIParser.ChartTypeContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link UIParser#eventBinding}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitEventBinding(UIParser.EventBindingContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link UIParser#animationBinding}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAnimationBinding(UIParser.AnimationBindingContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link UIParser#animationType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAnimationType(UIParser.AnimationTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link UIParser#effectBinding}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEffectBinding(UIParser.EffectBindingContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link UIParser#effectType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEffectType(UIParser.EffectTypeContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link UIParser#eventAction}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitEventAction(UIParser.EventActionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link UIParser#chartProperty}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitChartProperty(UIParser.ChartPropertyContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link UIParser#labelProperty}.
 	 * @param ctx the parse tree
@@ -484,4 +526,16 @@ public interface UIVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitDialogType(UIParser.DialogTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link UIParser#dataList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDataList(UIParser.DataListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link UIParser#dataPair}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDataPair(UIParser.DataPairContext ctx);
 }

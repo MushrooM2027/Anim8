@@ -473,6 +473,30 @@ public class UIBaseListener implements UIListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterChartComponent(UIParser.ChartComponentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitChartComponent(UIParser.ChartComponentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterChartType(UIParser.ChartTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitChartType(UIParser.ChartTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterEventBinding(UIParser.EventBindingContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -485,6 +509,54 @@ public class UIBaseListener implements UIListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterAnimationBinding(UIParser.AnimationBindingContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAnimationBinding(UIParser.AnimationBindingContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAnimationType(UIParser.AnimationTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAnimationType(UIParser.AnimationTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEffectBinding(UIParser.EffectBindingContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEffectBinding(UIParser.EffectBindingContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEffectType(UIParser.EffectTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEffectType(UIParser.EffectTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterEventAction(UIParser.EventActionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -492,6 +564,18 @@ public class UIBaseListener implements UIListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitEventAction(UIParser.EventActionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterChartProperty(UIParser.ChartPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitChartProperty(UIParser.ChartPropertyContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -960,6 +1044,30 @@ public class UIBaseListener implements UIListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDialogType(UIParser.DialogTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDataList(UIParser.DataListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDataList(UIParser.DataListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDataPair(UIParser.DataPairContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDataPair(UIParser.DataPairContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

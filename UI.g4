@@ -51,10 +51,11 @@ component:
 	| scrollPaneComponent
 	| splitPaneComponent
 	| treeTableViewComponent
-	| dialogComponent;
+	| dialogComponent
+	| chartComponent;
 
 labelComponent:
-	'label' STRING labelProperty* layoutProperty* eventBinding*; // <-- NEW
+	'label' STRING labelProperty* layoutProperty* animationBinding* eventBinding*; // <-- NEW
 
 textfieldComponent:
 	'textfield' 'id' IDENTIFIER textfieldProperty* layoutProperty* eventBinding*; // <-- NEW
@@ -73,11 +74,11 @@ dropdownComponent:
 // <-- NEW
 
 buttonComponent:
-	'button' STRING 'onClick' eventAction? buttonProperty* layoutProperty* eventBinding*;
+	'button' STRING 'onClick' eventAction? buttonProperty* layoutProperty* animationBinding* effectBinding* animationBinding* eventBinding*;
 // <-- updated: onClick optional, eventBinding added
 
 imageComponent:
-	'image' 'source' STRING imageProperty* layoutProperty*;
+	'image' 'source' STRING imageProperty* layoutProperty* animationBinding*;
 
 sliderComponent:
 	'slider' 'id' IDENTIFIER 'min' INT 'max' INT 'value' INT sliderProperty* layoutProperty*
@@ -154,8 +155,23 @@ treeTableViewComponent:
 dialogComponent:
 	'dialog' STRING 'id' IDENTIFIER dialogProperty* layoutProperty* eventBinding*;
 
+chartComponent:
+	'chart' chartType 'id' IDENTIFIER 'title' STRING 'data' dataList chartProperty* layoutProperty*
+		eventBinding*;
+
+chartType: 'PieChart' | 'BarChart' | 'LineChart';
+
 // --- NEW: General event binding rule
 eventBinding: 'onEvent' STRING 'do' eventAction;
+
+animationBinding: 'animate' animationType ('duration' INT)? ('cycleCount' INT)? ('autoReverse' BOOLEAN)?;
+
+animationType: 'fade' | 'rotate' | 'scale' | 'translate';
+
+effectBinding: 'effect' effectType;
+
+effectType: 'dropShadow' | 'glow' | 'bloom' | 'sepia' | 'gaussianBlur';
+
 
 // --- Event Actions
 eventAction:
@@ -164,6 +180,13 @@ eventAction:
 	| 'navigate' 'to' STRING;
 
 // --- Properties
+
+chartProperty:
+	'legendVisible' BOOLEAN
+	| 'animated' BOOLEAN
+	| 'categoryAxisLabel' STRING
+	| 'valueAxisLabel' STRING
+	| eventBinding; // reuse general event bindings
 
 labelProperty:
 	'font' STRING
@@ -361,12 +384,11 @@ stageStyleType:
 	| 'UNIFIED';
 
 dialogType:
-    'INFORMATION'
-    | 'WARNING'
-    | 'CONFIRMATION'
-    | 'ERROR'
-    | 'NONE';
-
+	'INFORMATION'
+	| 'WARNING'
+	| 'CONFIRMATION'
+	| 'ERROR'
+	| 'NONE';
 
 // Lexer Rules
 STRING: '"' (~["\r\n])* '"';
@@ -374,6 +396,8 @@ BOOLEAN: 'true' | 'false';
 IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
 INT: [0-9]+;
 FLOAT: [0-9]+ '.' [0-9]+;
+dataList: '{' dataPair (',' dataPair)* '}';
+dataPair: STRING ':' (INT | FLOAT);
 
 LINE_COMMENT: '//' ~[\r\n]* -> skip;
 BLOCK_COMMENT: '/*' .*? '*/' -> skip;
